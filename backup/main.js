@@ -2,79 +2,12 @@
  * Created by Dave on 9/24/2016.
  */
 
-function editItem() {
-    var editableItem = $("<textarea />");
-    editableItem.val($(this).text());
-    $(this).replaceWith(editableItem);
-    editableItem.focus();
-    editableItem.blur(editableItemBlurred); // NEED TO PREVENT CLOSE BUTTON FROM TURNING INTO AN X IN THIS FUNCTION
-    $(document).keypress(function(e) {
-        if(e.which == 13) {
-            editableItemBlurred();
-        }
-    });
-}
-
-function editableItemBlurred() {
-
-    var editableItemValue = $(this).val(); //   NEED TO RECREATE AND ATTACH CLOSE BUTTON IN THIS FUNCTION
-    var div = document.createElement("DIV");
-   // alert("got there");
-   // div.html(editableItemHTML);
-
-    div.className = "draggableClass";
-    div.click(editItem);
-
-    var li = document.createElement("li");
-    var t = document.createTextNode(editableItemValue);
-
-    li.appendChild(t);
-    div.appendChild(li);
-
-    // Create Close button
-    var span = document.createElement("SPAN");
-    var txt = document.createTextNode("\u00D7");
-    span.className = "close";
-    span.appendChild(txt);
-    li.appendChild(span);
-    span.onclick = function() {
-        var div = this.parentElement;
-        div.style.display = "none";
-    };
-
-    $(this).replaceWith(div);
-
-
-
-    setDragDrop();
-    $(".draggableClass").dblclick(editItem);
-
-    /*
-    var span = document.createElement("SPAN");
-    var txt = document.createTextNode("\u00D7");
-    span.className = "close";
-    span.appendChild(txt);
-    spanHTML = $(span).html();
-    $(div).after(spanHTML);
-    span.onclick = function() {
-        var thisDiv = this.parentElement;
-        thisDiv.style.display = "none";
-    };
-    //test
-    $(this).replaceWith(div);
-    // setup the click event for this new div
-    div.click(editItem);
-*/
-}
-
-
 var itemNum = 0;
 
- /* $('.dropOnly').droppable( {
+$('.dropOnly').droppable( {
     drop: handleDropEvent
-}); */
+});
 
-// Handle the Enter key
 $(document).ready(function(){
     $('#inputField').keypress(function(e){
         if(e.keyCode==13)
@@ -111,12 +44,6 @@ function newElement() {
     div.id = ("item" + itemNum);
     div.className = "draggableClass";
 
-    var mainLevelDropDiv = document.createElement("DIV");
-    mainLevelDropDiv.className = "dropOnly";
-    $(mainLevelDropDiv).data( "childOf", div.id );
-
-    //alert(mainLevelDropDiv.style.backgroundColor);
-
     var li = document.createElement("li");
     var inputValue = document.getElementById("inputField").value;
     var t = document.createTextNode(inputValue);
@@ -124,9 +51,7 @@ function newElement() {
     li.appendChild(t);
     div.appendChild(li);
 
-
     document.getElementById("myUL").appendChild(div);
-    document.getElementById("myUL").appendChild(mainLevelDropDiv);
     document.getElementById("inputField").value = "";
 
     // Create Close button
@@ -141,7 +66,6 @@ function newElement() {
         };
 
     setDragDrop();
-    $(".draggableClass").dblclick(editItem);
 }
 
 function handleDragStop( event, ui ) {
@@ -157,8 +81,6 @@ function handleDropEvent( event, ui ) {
 function handleTopLevelDropEvent( event, ui ) {
     var draggable = ui.draggable;
 
-    event.target.style.backgroundColor = "white";
-
     parentSnapTopLevel(event.target,draggable);
 }
 
@@ -170,6 +92,8 @@ function parentSnap(droppedOn, droppedElement)
     var childID = droppedElement.attr('id');
     var childHTML = "<div class='droppedContainer'><div class='draggableClass' data-childOf='" + parentID + "' id='" + childID + "'>" + $(droppedElement).html() + "</div></div>";
     var allDivs = document.getElementsByTagName("DIV");
+
+    var testHTML = "<div background-color='black' class='mainLevelDrop'>test</div>"; // BEGINNING OF LINE FOR DROPPING IN BETWEEN THINGS
 
     // Find nested items of dropped item
     for (var a = 0; a < allDivs.length; a++) {
@@ -183,14 +107,12 @@ function parentSnap(droppedOn, droppedElement)
         }
     }
 
-    var mainDropHTML = "<div class='dropOnly'></div>";
-
     // Re-create dropped item and its children
     if(subChildHTML == undefined){
-        var clonedItem = $(droppedOn).after(parentHTML + mainDropHTML + childHTML);
+        var clonedItem = $(droppedOn).after(parentHTML + testHTML + childHTML); //ADD TESTHTML HERE FOR THE LINE IN BETWEEN THINGS
     }
     else {
-        var clonedItem = $(droppedOn).after(parentHTML + mainDropHTML + childHTML  + subChildHTML);
+        var clonedItem = $(droppedOn).after(parentHTML + testHTML + childHTML + subChildHTML); //ADD TESTHTML HERE FOR THE LINE IN BETWEEN THINGS
     }
 
     $(droppedElement).remove();
@@ -205,7 +127,7 @@ function parentSnap(droppedOn, droppedElement)
     }
 
     setDragDrop();
-    $(".draggableClass").dblclick(editItem);
+
 
 }
 
@@ -214,8 +136,7 @@ function parentSnapTopLevel(droppedOn, droppedElement)
 {
     var parentID = droppedOn.id;
     var childID = droppedElement.attr('id');
-    var childHTML = "<div class='draggableClass' id='" + childID + "'>" + $(droppedElement).html() + "</div>";
-    //var childHTML = "<div class='draggableClass' data-childOf='" + parentID + "' id='" + childID + "'>" + $(droppedElement).html() + "</div>";
+    var childHTML = "<div class='draggableClass' data-childOf='" + parentID + "' id='" + childID + "'>" + $(droppedElement).html() + "</div>";
     var allDivs = document.getElementsByTagName("DIV");
 
     // Find nested items of dropped item
@@ -230,14 +151,12 @@ function parentSnapTopLevel(droppedOn, droppedElement)
         }
     }
 
-    var mainDropHTML = "<div class='dropOnly'></div>";
-
     // Re-create dropped item and its children
     if(subChildHTML == undefined){
-        var clonedItem = $(droppedOn).after(childHTML + mainDropHTML);
+        var clonedItem = $(droppedOn).after(childHTML);
     }
     else {
-        var clonedItem = $(droppedOn).after(childHTML + mainDropHTML + subChildHTML);
+        var clonedItem = $(droppedOn).after(childHTML + subChildHTML);
     }
 
     // Add close button function to re-created item
@@ -251,7 +170,6 @@ function parentSnapTopLevel(droppedOn, droppedElement)
     setDragDrop();
 
     $(droppedElement).remove();
-    $(".draggableClass").dblclick(editItem);
 }
 
 function setDragDrop(){
@@ -265,13 +183,7 @@ function setDragDrop(){
     });
 
     $('.dropOnly').droppable( {
-        drop: handleTopLevelDropEvent,
-        over: function( event, ui ) {
-            event.target.style.backgroundColor = "#000000";
-        },
-        out: function( event, ui ) {
-            event.target.style.backgroundColor = "white";
-        }
+        drop: handleTopLevelDropEvent
     });
 
     $('.dropOnly').draggable( {
@@ -281,7 +193,11 @@ function setDragDrop(){
 }
 
 
+
 function listTypeDropdown(caller) {
+  //  alert(caller.id);
+
+
     if(caller.id == 'dropdownBullet') {
         document.getElementById('dropdownBulletList').classList.toggle("show");
     }
@@ -291,33 +207,22 @@ function listTypeDropdown(caller) {
 }
 
 
-// Close the dropdown menus when clicked elsewhere
+
+// Close the dropdown menu if the user clicks outside of it
 window.onclick = function(event) {
+    if (!event.target.matches('.dropbtn')) {
 
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-
-    if (!event.target.matches('#dropdownBullet')) {
-
-        for (var i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-
-            if (openDropdown.id == "dropdownBulletList" && openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-            }
-        }
-    }
-
-    if (!event.target.matches('#dropdownFont')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
 
         for (var i = 0; i < dropdowns.length; i++) {
             var openDropdown = dropdowns[i];
-
-            if (openDropdown.id == "dropdownFontList" && openDropdown.classList.contains('show')) {
+            if (openDropdown.classList.contains('show')) {
                 openDropdown.classList.remove('show');
             }
         }
     }
 };
+
 
 
 function selectListType(caller) {
@@ -333,21 +238,21 @@ function selectListType(caller) {
     }
     else if(caller.id == "listFont1") {
         document.getElementById("myUL").style.fontFamily = "Lucida Console, Monaco, monospace";
-
-
-
+        document.getElementById("button").style.fontFamily = "Lucida Console, Monaco, monospace";
+        document.getElementById("inputField").style.fontFamily = "Lucida Console, Monaco, monospace";
+        document.getElementById("headerDiv").style.fontFamily = "Lucida Console, Monaco, monospace";
     }
     else if(caller.id == "listFont2") {
         document.getElementById("myUL").style.fontFamily = "Comic Sans MS, cursive, sans-serif";
-
-
-
+        document.getElementById("button").style.fontFamily = "Comic Sans MS, cursive, sans-serif";
+        document.getElementById("inputField").style.fontFamily = "Comic Sans MS, cursive, sans-serif";
+        document.getElementById("headerDiv").style.fontFamily = "Comic Sans MS, cursive, sans-serif";
     }
     else if(caller.id == "listFont3") {
         document.getElementById("myUL").style.fontFamily = "Times New Roman, Times, serif";
-
-
-
+        document.getElementById("button").style.fontFamily = "Times New Roman, Times, serif";
+        document.getElementById("inputField").style.fontFamily = "Times New Roman, Times, serif";
+        document.getElementById("headerDiv").style.fontFamily = "Times New Roman, Times, serif";
     }
 
     //addbtn, Input, Header

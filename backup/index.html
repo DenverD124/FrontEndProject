@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Front End</title>
+    <link href="style.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+</head>
+
+<body>
+
+<div id="headerDiv" class="header">
+    <h2 style="margin: 5px">To Do List <br/></h2>
+
+
+    <input type="text" id="inputField" placeholder="Enter Item...">
+
+    <input type="button" onclick="newElement()" class="addBtn" id="button" value="Add"></input>
+
+</div>
+
+
+
+<div class="dropdown">
+    <button onclick="listTypeDropdown(this)" class="dropbtn" id="dropdownBullet">Bullet Type</button>
+    <div id="dropdownBulletList" class="dropdown-content">
+        <div id="listNone" class="menuItem" onclick="selectListType(this)">None</div>
+        <div id="listSquare" class="menuItem" onclick="selectListType(this)">Squares</div>
+        <div id="listCircle" class="menuItem" onclick="selectListType(this)">Circles</div>
+    </div>
+</div>
+
+<div class="dropdown">
+    <button onclick="listTypeDropdown(this)" class="dropbtn" id="dropdownFont">Font</button>
+    <div id="dropdownFontList" class="dropdown-content">
+        <div id="listFont1" class="menuItem" onclick="selectListType(this)">Lucida Monospace</div>
+        <div id="listFont2" class="menuItem" onclick="selectListType(this)">Comic Sans</div>
+        <div id="listFont3" class="menuItem" onclick="selectListType(this)">Times New Roman</div>
+    </div>
+</div>
+
+<ul id="myUL">
+   <div class="dropOnly"><li>My Tasks:</li></div>
+</ul>
+
+
+
+</body>
+
+</html>
+
+
