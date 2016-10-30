@@ -4,20 +4,31 @@
 
 function editItem() {
     var editableItem = $("<textarea />");
-    editableItem.val($(this).text());
+    editableItem.val($(this).text().slice(0, -2));
     $(this).replaceWith(editableItem);
     editableItem.focus();
-    editableItem.blur(editableItemBlurred); // NEED TO PREVENT CLOSE BUTTON FROM TURNING INTO AN X IN THIS FUNCTION
+    editableItem.select();
+    editableItem.blur(editableItemBlurred);
+
+    $(editableItem).keypress(function(e){
+        if(e.which == 13){
+            $(editableItem).blur();
+            return false;
+        }
+    });
+
+    /*
     $(document).keypress(function(e) {
         if(e.which == 13) {
             editableItemBlurred();
         }
-    });
+    }); */
 }
 
 function editableItemBlurred() {
 
-    var editableItemValue = $(this).val(); //   NEED TO RECREATE AND ATTACH CLOSE BUTTON IN THIS FUNCTION
+    var editableItemValue = $(this).val();
+    var editableItemValue = editableItemValue;
     var div = document.createElement("DIV");
    // alert("got there");
    // div.html(editableItemHTML);
@@ -32,15 +43,26 @@ function editableItemBlurred() {
     div.appendChild(li);
 
     // Create Close button
-    var span = document.createElement("SPAN");
-    var txt = document.createTextNode("\u00D7");
-    span.className = "close";
-    span.appendChild(txt);
-    li.appendChild(span);
-    span.onclick = function() {
+    var closeSpan = document.createElement("SPAN");
+    var closeTxt = document.createTextNode("\u00D7");
+    closeSpan.className = "close";
+    closeSpan.appendChild(closeTxt);
+    li.appendChild(closeSpan);
+    closeSpan.onclick = function() {
         var div = this.parentElement;
         div.style.display = "none";
     };
+
+    // Create Add button
+    var addSpan = document.createElement("SPAN");
+    var addTxt = document.createTextNode("\u002B");
+    addSpan.className = "add";
+    addSpan.appendChild(addTxt);
+    li.appendChild(addSpan);
+    addSpan.onclick = function() {
+        newElement("Enter Item...");
+    };
+
 
     $(this).replaceWith(div);
 
@@ -50,13 +72,13 @@ function editableItemBlurred() {
     $(".draggableClass").dblclick(editItem);
 
     /*
-    var span = document.createElement("SPAN");
-    var txt = document.createTextNode("\u00D7");
-    span.className = "close";
-    span.appendChild(txt);
-    spanHTML = $(span).html();
+    var closeSpan = document.createElement("SPAN");
+    var closeTxt = document.createTextNode("\u00D7");
+    closeSpan.className = "close";
+    closeSpan.appendChild(closeTxt);
+    spanHTML = $(closeSpan).html();
     $(div).after(spanHTML);
-    span.onclick = function() {
+    closeSpan.onclick = function() {
         var thisDiv = this.parentElement;
         thisDiv.style.display = "none";
     };
@@ -74,12 +96,11 @@ var itemNum = 0;
     drop: handleDropEvent
 }); */
 
-// Handle the Enter key
+
+// Initial setup
 $(document).ready(function(){
-    $('#inputField').keypress(function(e){
-        if(e.keyCode==13)
-            $('#button').click();
-    });
+    // Create initial text element
+    newElement("Enter Text...");
 });
 
 //Add Close buttons to items
@@ -104,7 +125,7 @@ for (var i = 0; i < close.length; i++) {
  }
 
 // Create a new list item when clicking on the "Add" button
-function newElement() {
+function newElement(elementText) {
     itemNum++;
 
     var div = document.createElement("DIV");
@@ -115,19 +136,15 @@ function newElement() {
     mainLevelDropDiv.className = "dropOnly";
     $(mainLevelDropDiv).data( "childOf", div.id );
 
-    //alert(mainLevelDropDiv.style.backgroundColor);
-
     var li = document.createElement("li");
-    var inputValue = document.getElementById("inputField").value;
-    var t = document.createTextNode(inputValue);
+    var t = document.createTextNode(elementText);
 
     li.appendChild(t);
     div.appendChild(li);
 
-
     document.getElementById("myUL").appendChild(div);
     document.getElementById("myUL").appendChild(mainLevelDropDiv);
-    document.getElementById("inputField").value = "";
+    //document.getElementById("inputField").value = "";
 
     // Create Close button
     var span = document.createElement("SPAN");
@@ -139,6 +156,16 @@ function newElement() {
         var div = this.parentElement;
         div.style.display = "none";
         };
+
+    // Create Add button
+    var addSpan = document.createElement("SPAN");
+    var addTxt = document.createTextNode("\u002B");
+    addSpan.className = "add";
+    addSpan.appendChild(addTxt);
+    li.appendChild(addSpan);
+    addSpan.onclick = function() {
+        newElement("Enter Item...");
+    };
 
     setDragDrop();
     $(".draggableClass").dblclick(editItem);

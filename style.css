@@ -1,9 +1,25 @@
+.add {
+    position: relative;
+    right: 0;
+    top: 0;
+    margin: 5px 0 5px 5px;
+    padding: 12px 16px 12px 16px;
+    color: green;
+}
+
+.add:hover {
+    background-color: green;
+    color: white;
+}
+
 textarea {
     resize: none;
     outline: none;
     border: none;
     height: 25px;
+    width: 800px;
     font-size: 18px;
+    text-align: center;
 }
 
 .dropOnly {
@@ -129,8 +145,6 @@ body {
     padding: 30px 40px;
     color: white;
     text-align: center;
-    font-family: "Comic Sans MS", cursive, sans-serif;
-
 }
 
 input {
